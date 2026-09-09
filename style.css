@@ -12,3 +12,19 @@
 .official-link-card b{font-size:1.15rem;opacity:.45}
 .official-link-card:active{transform:scale(.99)}
 .quick-grid button:last-child:nth-child(odd){grid-column:1 / -1}
+
+.add-item-btn{width:100%;margin-top:12px;border:1px dashed #d8c5cf;background:#fff8fb;border-radius:12px;padding:11px 12px;font-weight:800;color:#6d5361}
+.custom-check-row{display:flex;align-items:center;border-bottom:1px solid #eee}
+.custom-check-row .check-item{flex:1;border-bottom:0}
+.custom-check-row.done span{text-decoration:line-through;opacity:.45}
+.delete-custom{border:0;background:transparent;padding:10px 8px;font-size:.78rem;color:#9a6d7f;font-weight:700}
+.custom-dialog[hidden]{display:none}
+.custom-dialog{position:fixed;inset:0;z-index:120;background:rgba(0,0,0,.38);display:grid;place-items:center;padding:24px}
+.custom-dialog-card{width:min(360px,100%);background:#fff;border-radius:20px;padding:20px;box-shadow:0 16px 44px rgba(0,0,0,.2)}
+.custom-dialog-card strong{display:block;margin-bottom:12px}
+.custom-dialog-card input{width:100%;font:inherit;border:1px solid #ddd;border-radius:12px;padding:12px 13px;outline:none}
+.custom-dialog-card input:focus{border-color:#b88fa3;box-shadow:0 0 0 3px #f3e8ee}
+.custom-dialog-actions{display:flex;gap:10px;margin-top:14px}
+.custom-dialog-actions button{flex:1;border:0;border-radius:12px;padding:11px;font-weight:800}
+.custom-dialog-actions button:first-child{background:#f2f2f2}
+.custom-dialog-actions button:last-child{background:#f3e9ee;color:#6d5361}

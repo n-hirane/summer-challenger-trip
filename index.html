@@ -6,7 +6,7 @@
   <meta name="theme-color" content="#fff7fb">
   <meta name="description" content="INORI MINASE OPEN AIR LIVE 2026 Summer Challenger 旅のしおり">
   <link rel="manifest" href="manifest.webmanifest">
-  <link rel="stylesheet" href="style.css?v=11">
+  <link rel="stylesheet" href="style.css?v=12">
   <title>Summer Challenger 旅のしおり</title>
 </head>
 <body>
@@ -140,9 +140,19 @@
       <header><p class="eyebrow">PACKING CHECK LIST</p><h2>忘れ物防止</h2></header>
       <div class="check-status"><div>表示：<strong id="checkProfileName">未選択</strong> <button id="changeProfile" class="mini-btn">変更</button></div><strong id="checkProgress"></strong></div>
       <div id="profilePicker" class="profile-picker" hidden><div class="profile-card"><strong>チェックリストを選択</strong><p>この端末では次回から選んだリストを自動表示します。</p><button data-profile-choice="natsumi">なつみ</button><button data-profile-choice="yu">ゆう</button></div></div>
-      <div class="check-group card"><h3 class="check-group-title"><span>LIVE</span><span id="liveProgress"></span></h3><div id="liveChecks"></div></div>
-      <div class="check-group card"><h3 class="check-group-title"><span>TRAVEL</span><span id="travelProgress"></span></h3><div id="travelChecks"></div></div>
-      <div class="check-group card"><h3 class="check-group-title"><span>HOTEL</span><span id="hotelProgress"></span></h3><div id="hotelChecks"></div></div>
+      <div class="check-group card"><h3 class="check-group-title"><span>LIVE</span><span id="liveProgress"></span></h3><div id="liveChecks"></div><button class="add-item-btn" type="button" data-add-group="live">＋ 項目を追加</button></div>
+      <div class="check-group card"><h3 class="check-group-title"><span>TRAVEL</span><span id="travelProgress"></span></h3><div id="travelChecks"></div><button class="add-item-btn" type="button" data-add-group="travel">＋ 項目を追加</button></div>
+      <div class="check-group card"><h3 class="check-group-title"><span>HOTEL</span><span id="hotelProgress"></span></h3><div id="hotelChecks"></div><button class="add-item-btn" type="button" data-add-group="hotel">＋ 項目を追加</button></div>
+      <div id="customItemDialog" class="custom-dialog" hidden>
+        <div class="custom-dialog-card">
+          <strong>項目を追加</strong>
+          <input id="customItemInput" type="text" maxlength="80" placeholder="持ち物を入力" autocomplete="off">
+          <div class="custom-dialog-actions">
+            <button type="button" id="customItemCancel">キャンセル</button>
+            <button type="button" id="customItemSave">追加</button>
+          </div>
+        </div>
+      </div>
       <button class="reset" id="resetChecks">チェックをすべて戻す</button>
     </section>
   </main>
@@ -155,6 +165,6 @@
     <button data-target="check">CHECK</button>
   </nav>
 
-  <script src="app.js?v=11"></script>
+  <script src="app.js?v=12"></script>
 </body>
 </html>

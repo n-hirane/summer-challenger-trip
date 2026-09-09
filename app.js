@@ -16,38 +16,207 @@ yu:{name:"ゆう",
 live:[["#","ライブ関連"],["ticket","チケット",1],["holder","チケットホルダー",1],["fc","FC会員証",1],["#","グッズ"],["penlight","ペンライト",1],["tshirt","Tシャツ",1],["towel","マフラータオル",1],["kurari","くらりうちわ",1],["wrist","リストバンド",1],["rubber2","ラババン×２",1],["#","推し活関連"],["fan","ファンサうちわ",1],["nuinori2","ぬいのり×２",1],["kurari-pouch","くらり共(くらりポーチ)",1],["acsta2","アクスタ×２",1],["gintape","銀テケース",1]],
 travel:[["pouch","色々入ってるポーチ"],["wax","ワックス、スプレー"],["eyedrops","目薬"],["sweat","汗拭きシート"],["battery","モバイルバッテリー"],["adapter","ＡＣアダプタ"],["bottle","水筒"]],
 hotel:[["#","着替え"],["pants3","パンツ×３",1],["socks3","靴下×３",1],["tshirt3","Ｔシャツ×３",1],["yshirt2","Ｙシャツ×２",1],["bottoms2","ズボン×２",1],["sandals","サンダル",1],["#","その他"],["trash3","ゴミ袋×３",1],["minaca-trade","交換用MINACA",1],["minaca-spare","余りMINACA",1]]}};
-const PROFILE_KEY="summer-challenger-profile-v1", STATE_KEY="summer-challenger-checks-v3";
-let activeProfile=localStorage.getItem(PROFILE_KEY); if(!checklists[activeProfile]) activeProfile=null;
-let state={}; try{state=JSON.parse(localStorage.getItem(STATE_KEY)||"{}")||{}}catch(e){state={}}
+
+const PROFILE_KEY="summer-challenger-profile-v1";
+const STATE_KEY="summer-challenger-checks-v3";
+const CUSTOM_KEY="summer-challenger-custom-items-v1";
+
+let activeProfile=localStorage.getItem(PROFILE_KEY);
+if(!checklists[activeProfile]) activeProfile=null;
+
+let state={};
+try{
+  state=JSON.parse(localStorage.getItem(STATE_KEY)||"{}")||{};
+}catch(e){
+  state={};
+}
+
+let customItems={};
+try{
+  customItems=JSON.parse(localStorage.getItem(CUSTOM_KEY)||"{}")||{};
+}catch(e){
+  customItems={};
+}
+if(!customItems || typeof customItems!=="object") customItems={};
+
 const realItems=a=>a.filter(x=>x[0]!=="#");
+
+function customKey(profile,group){
+  return `${profile}-${group}`;
+}
+
+function getCustomItems(profile,group){
+  const key=customKey(profile,group);
+  return Array.isArray(customItems[key]) ? customItems[key] : [];
+}
+
+function saveCustomItems(){
+  localStorage.setItem(CUSTOM_KEY,JSON.stringify(customItems));
+}
+
+function sanitizeLabel(value){
+  return value.replace(/\s+/g," ").trim().slice(0,80);
+}
+
+function countGroup(profile,group){
+  const fixed=realItems(checklists[profile][group]);
+  const custom=getCustomItems(profile,group);
+  const all=[
+    ...fixed.map(x=>({id:x[0],custom:false})),
+    ...custom.map(x=>({id:x.id,custom:true}))
+  ];
+  const done=all.filter(x=>{
+    const prefix=x.custom?"custom":"fixed";
+    return state[`${profile}-${group}-${prefix}-${x.id}`];
+  }).length;
+  return {done,total:all.length};
+}
+
 function updateProgress(){
- if(!activeProfile)return;
- let done=0,total=0;
- ["live","travel","hotel"].forEach(g=>{
-  const items=realItems(checklists[activeProfile][g]), d=items.filter(x=>state[`${activeProfile}-${g}-${x[0]}`]).length;
-  done+=d; total+=items.length;
-  const p=document.getElementById(g+"Progress"); if(p)p.textContent=`${d} / ${items.length}`;
- });
- document.getElementById("checkProgress").textContent=`${done} / ${total} チェック済み`;
- document.getElementById("checkProfileName").textContent=checklists[activeProfile].name;
+  if(!activeProfile)return;
+  let done=0,total=0;
+  ["live","travel","hotel"].forEach(g=>{
+    const c=countGroup(activeProfile,g);
+    done+=c.done;
+    total+=c.total;
+    const p=document.getElementById(g+"Progress");
+    if(p)p.textContent=`${c.done} / ${c.total}`;
+  });
+  const all=document.getElementById("checkProgress");
+  if(all)all.textContent=`${done} / ${total} チェック済み`;
+  const who=document.getElementById("checkProfileName");
+  if(who)who.textContent=checklists[activeProfile].name;
 }
-function renderChecks(){
- if(!activeProfile){document.getElementById("profilePicker").hidden=false;return}
- ["live","travel","hotel"].forEach(g=>{
-  const el=document.getElementById(g+"Checks");
-  el.innerHTML=checklists[activeProfile][g].map(x=>{
-   if(x[0]==="#")return `<div class="check-subhead">${x[1]}</div>`;
-   const id=`${activeProfile}-${g}-${x[0]}`;
-   return `<label class="check-item ${x[2]?"sub-item":""} ${state[id]?"done":""}"><input type="checkbox" data-id="${id}" ${state[id]?"checked":""}><span>${x[1]}</span></label>`;
+
+function renderFixedItems(profile,group){
+  return checklists[profile][group].map(x=>{
+    if(x[0]==="#")return `<div class="check-subhead">${x[1]}</div>`;
+    const id=`${profile}-${group}-fixed-${x[0]}`;
+    return `<label class="check-item ${x[2]?"sub-item":""} ${state[id]?"done":""}">
+      <input type="checkbox" data-id="${id}" ${state[id]?"checked":""}>
+      <span>${x[1]}</span>
+    </label>`;
   }).join("");
- });
- document.querySelectorAll(".check-item input").forEach(i=>i.addEventListener("change",e=>{state[e.target.dataset.id]=e.target.checked;localStorage.setItem(STATE_KEY,JSON.stringify(state));renderChecks()}));
- updateProgress();
 }
-function chooseProfile(p){activeProfile=p;localStorage.setItem(PROFILE_KEY,p);document.getElementById("profilePicker").hidden=true;renderChecks()}
+
+function renderCustomItems(profile,group){
+  return getCustomItems(profile,group).map(item=>{
+    const id=`${profile}-${group}-custom-${item.id}`;
+    return `<div class="custom-check-row ${state[id]?"done":""}">
+      <label class="check-item custom-item">
+        <input type="checkbox" data-id="${id}" ${state[id]?"checked":""}>
+        <span>${item.label}</span>
+      </label>
+      <button class="delete-custom" type="button" data-delete-custom="${item.id}" data-group="${group}" aria-label="${item.label}を削除">削除</button>
+    </div>`;
+  }).join("");
+}
+
+function renderChecks(){
+  if(!activeProfile){
+    const picker=document.getElementById("profilePicker");
+    if(picker)picker.hidden=false;
+    return;
+  }
+
+  ["live","travel","hotel"].forEach(g=>{
+    const el=document.getElementById(g+"Checks");
+    el.innerHTML=renderFixedItems(activeProfile,g)+renderCustomItems(activeProfile,g);
+  });
+
+  document.querySelectorAll(".check-item input").forEach(i=>i.addEventListener("change",e=>{
+    state[e.target.dataset.id]=e.target.checked;
+    localStorage.setItem(STATE_KEY,JSON.stringify(state));
+    renderChecks();
+  }));
+
+  document.querySelectorAll("[data-delete-custom]").forEach(button=>{
+    button.addEventListener("click",()=>{
+      const group=button.dataset.group;
+      const id=button.dataset.deleteCustom;
+      const key=customKey(activeProfile,group);
+      const item=getCustomItems(activeProfile,group).find(x=>x.id===id);
+      if(!item)return;
+      if(confirm(`「${item.label}」を削除しますか？`)){
+        customItems[key]=getCustomItems(activeProfile,group).filter(x=>x.id!==id);
+        delete state[`${activeProfile}-${group}-custom-${id}`];
+        saveCustomItems();
+        localStorage.setItem(STATE_KEY,JSON.stringify(state));
+        renderChecks();
+      }
+    });
+  });
+
+  updateProgress();
+}
+
+function chooseProfile(p){
+  activeProfile=p;
+  localStorage.setItem(PROFILE_KEY,p);
+  const picker=document.getElementById("profilePicker");
+  if(picker)picker.hidden=true;
+  renderChecks();
+}
+
+function openAddDialog(group){
+  if(!activeProfile)return;
+  const input=document.getElementById("customItemInput");
+  const dialog=document.getElementById("customItemDialog");
+  dialog.dataset.group=group;
+  input.value="";
+  dialog.hidden=false;
+  setTimeout(()=>input.focus(),50);
+}
+
+function closeAddDialog(){
+  document.getElementById("customItemDialog").hidden=true;
+}
+
+function addCustomItem(){
+  if(!activeProfile)return;
+  const dialog=document.getElementById("customItemDialog");
+  const group=dialog.dataset.group;
+  const input=document.getElementById("customItemInput");
+  const label=sanitizeLabel(input.value);
+  if(!label){
+    input.focus();
+    return;
+  }
+  const key=customKey(activeProfile,group);
+  if(!Array.isArray(customItems[key]))customItems[key]=[];
+  const id=`${Date.now().toString(36)}-${Math.random().toString(36).slice(2,7)}`;
+  customItems[key].push({id,label});
+  saveCustomItems();
+  closeAddDialog();
+  renderChecks();
+}
+
 document.querySelectorAll("[data-profile-choice]").forEach(b=>b.addEventListener("click",()=>chooseProfile(b.dataset.profileChoice)));
-document.getElementById("changeProfile").addEventListener("click",()=>document.getElementById("profilePicker").hidden=false);
-document.getElementById("resetChecks").addEventListener("click",()=>{if(!activeProfile)return;if(confirm(`${checklists[activeProfile].name}のチェック状態をすべて未チェックに戻しますか？`)){["live","travel","hotel"].forEach(g=>realItems(checklists[activeProfile][g]).forEach(x=>delete state[`${activeProfile}-${g}-${x[0]}`]));localStorage.setItem(STATE_KEY,JSON.stringify(state));renderChecks()}});
+document.getElementById("changeProfile")?.addEventListener("click",()=>{
+  document.getElementById("profilePicker").hidden=false;
+});
+
+document.querySelectorAll("[data-add-group]").forEach(b=>{
+  b.addEventListener("click",()=>openAddDialog(b.dataset.addGroup));
+});
+
+document.getElementById("customItemCancel")?.addEventListener("click",closeAddDialog);
+document.getElementById("customItemSave")?.addEventListener("click",addCustomItem);
+document.getElementById("customItemInput")?.addEventListener("keydown",e=>{
+  if(e.key==="Enter")addCustomItem();
+});
+
+document.getElementById("resetChecks").addEventListener("click",()=>{
+  if(!activeProfile)return;
+  if(confirm(`${checklists[activeProfile].name}のチェック状態をすべて未チェックに戻しますか？`)){
+    Object.keys(state).forEach(key=>{
+      if(key.startsWith(`${activeProfile}-`)) delete state[key];
+    });
+    localStorage.setItem(STATE_KEY,JSON.stringify(state));
+    renderChecks();
+  }
+});
+
 renderChecks();
 
 const d=new Date();
