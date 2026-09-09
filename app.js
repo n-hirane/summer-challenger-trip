@@ -42,7 +42,16 @@ else if(d>=new Date(2026,8,14)&&d<new Date(2026,8,15)) title="DAY 3 · FUJI-Q";
 else if(d>=new Date(2026,8,15)) title="旅行終了";
 document.getElementById("todayTitle").textContent=title;
 
-if("serviceWorker" in navigator) window.addEventListener("load",()=>navigator.serviceWorker.register("service-worker.js"));
+if("serviceWorker" in navigator){
+  window.addEventListener("load", async ()=>{
+    try{
+      const registration=await navigator.serviceWorker.register("service-worker.js");
+      await registration.update();
+    }catch(e){
+      console.warn("Service Worker update failed",e);
+    }
+  });
+}
 
 const spotButtons=[...document.querySelectorAll('.spot[data-spot]')];
 const mapMarkers=[...document.querySelectorAll('.map-marker[data-spot]')];
