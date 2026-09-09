@@ -66,7 +66,13 @@ const lists={
 };
 
 const KEY="summer-challenger-checks-v2";
-let state=JSON.parse(localStorage.getItem(KEY)||"{}");
+let state={};
+try{
+  state=JSON.parse(localStorage.getItem(KEY)||"{}");
+  if(!state || typeof state!=="object") state={};
+}catch(e){
+  state={};
+}
 
 function renderChecks(){
   Object.entries(lists).forEach(([group,items])=>{
