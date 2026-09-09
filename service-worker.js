@@ -1,9 +1,9 @@
-const CACHE="summer-challenger-v9";
+const CACHE="summer-challenger-v11";
 const CORE=[
   "./",
   "./index.html",
-  "./style.css?v=9",
-  "./app.js?v=9",
+  "./style.css?v=11",
+  "./app.js?v=11",
   "./manifest.webmanifest"
 ];
 const STATIC=[
