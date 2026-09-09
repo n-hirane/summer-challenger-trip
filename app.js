@@ -7,102 +7,47 @@ function show(id){
 }
 nav.forEach(b=>b.addEventListener('click',()=>show(b.dataset.target)));
 
-const lists={
-  live:[
-    {id:"ticket",label:"チケット"},
-    {id:"ticket-case",label:"チケットケース"},
-    {id:"fc-card",label:"FC会員証"},
-    {id:"penlight",label:"ペンライト"},
-    {id:"muffler-towel",label:"マフラータオル"},
-    {id:"live-t",label:"ライブT"},
-    {id:"wristband",label:"リストバンド"},
-    {id:"rubber-band-2",label:"ラババン×2"},
-    {id:"kurari-uchiwa",label:"くらりうちわ"},
-    {id:"fanservice-uchiwa",label:"ファンサうちわ"},
-    {id:"nuinori-2",label:"ぬいのり×2"},
-    {id:"kurari-pouch",label:"くらり共(くらりポーチ)"},
-    {id:"acrylic-stand-2",label:"アクスタ×2"},
-    {id:"gintape-case",label:"銀テケース"},
-    {id:"minaca-trade",label:"交換用MINACA"},
-    {id:"minaca-spare",label:"あまりMINACA"},
-    {id:"valuables-ziplock",label:"貴重品用ジップロック"},
-    {id:"large-plastic-bag",label:"荷物全体ビニール袋"}
-  ],
-  travel:[
-    {id:"wallet",label:"財布"},
-    {id:"smartphone",label:"スマホ"},
-    {id:"mobile-battery",label:"モバイルバッテリー"},
-    {id:"handkerchief",label:"ハンカチ"},
-    {id:"makeup-pouch-travel",label:"化粧ポーチ"},
-    {id:"kaganuikagamaru",label:"かがぬい＆かがまる"},
-    {id:"water-bottle",label:"水筒"},
-    {id:"case-a5-a4",label:"A5ケース or A4ケース"}
-  ],
-  hotel:[
-    {id:"makeup-pouch-hotel",label:"化粧ポーチ"},
-    {id:"power-strip-cable",label:"電源タップ＆長い充電コード"},
-    {id:"contacts-3days",label:"コンタクト(3日分)"},
-    {id:"glasses",label:"眼鏡"},
-    {id:"eye-drops",label:"目薬"},
-    {type:"subhead",label:"着替え"},
-    {id:"underwear",label:"下着",sub:true},
-    {id:"socks",label:"靴下",sub:true},
-    {id:"shirt",label:"シャツ",sub:true},
-    {id:"pants",label:"ズボン",sub:true},
-    {id:"sandals",label:"サンダル",sub:true},
-    {id:"roomwear",label:"部屋着",sub:true},
-    {id:"walking-pouch",label:"館内歩き用の持ち歩きポーチ"},
-    {id:"body-wipes",label:"汗拭きシート"},
-    {id:"hair-iron",label:"ヘアアイロン"},
-    {id:"hair-milk",label:"ヘアミルク"},
-    {id:"towel",label:"タオル"},
-    {type:"subhead",label:"お風呂セット"},
-    {id:"body-towel",label:"ボディタオル",sub:true},
-    {id:"face-wash",label:"洗顔フォーム",sub:true},
-    {id:"bath-bag",label:"持ち込み用袋",sub:true},
-    {id:"wet-tissue",label:"ウエットティッシュ"},
-    {id:"small-trash-bags",label:"小さめのごみ袋"}
-  ]
-};
-
-const KEY="summer-challenger-checks-v2";
-let state={};
-try{
-  state=JSON.parse(localStorage.getItem(KEY)||"{}");
-  if(!state || typeof state!=="object") state={};
-}catch(e){
-  state={};
+const checklists={
+natsumi:{name:"なつみ",
+live:[["ticket","チケット"],["ticket-case","チケットケース"],["fc","FC会員証"],["penlight","ペンライト"],["towel","マフラータオル"],["live-t","ライブT"],["rubber2","ラババン×2"],["kurari-uchiwa","くらりうちわ"],["kurari-bag","くらり巾着"],["acsta","アクスタ"],["gintape","銀テケース"],["ziplock","貴重品用ジップロック"],["bigbag","荷物全体ビニール袋"]],
+travel:[["wallet","財布"],["phone","スマホ"],["battery","モバイルバッテリー"],["handkerchief","ハンカチ"],["makeup","化粧ポーチ"],["nuinori","ぬいのり"],["kaga","かがぬい＆かがまる"],["bottle","水筒"],["case","A5ケース or A4ケース"]],
+hotel:[["makeup","化粧ポーチ"],["power","電源タップ＆長い充電コード"],["contacts","コンタクト(3日分)"],["glasses","眼鏡"],["#","着替え"],["underwear","下着",1],["socks","靴下",1],["shirt","シャツ",1],["pants","ズボン",1],["roomwear","部屋着",1],["pouch","館内歩き用の持ち歩きポーチ"],["iron","ヘアアイロン"],["milk","ヘアミルク"],["towel","タオル"],["#","お風呂セット"],["bodytowel","ボディタオル",1],["facewash","洗顔フォーム",1],["bathbag","持ち込み用袋",1],["wet","ウエットティッシュ"],["trash","小さめのごみ袋"]]},
+yu:{name:"ゆう",
+live:[["#","ライブ関連"],["ticket","チケット",1],["holder","チケットホルダー",1],["fc","FC会員証",1],["#","グッズ"],["penlight","ペンライト",1],["tshirt","Tシャツ",1],["towel","マフラータオル",1],["kurari","くらりうちわ",1],["wrist","リストバンド",1],["rubber2","ラババン×２",1],["#","推し活関連"],["fan","ファンサうちわ",1],["nuinori2","ぬいのり×２",1],["kurari-pouch","くらり共(くらりポーチ)",1],["acsta2","アクスタ×２",1],["gintape","銀テケース",1]],
+travel:[["pouch","色々入ってるポーチ"],["wax","ワックス、スプレー"],["eyedrops","目薬"],["sweat","汗拭きシート"],["battery","モバイルバッテリー"],["adapter","ＡＣアダプタ"],["bottle","水筒"]],
+hotel:[["#","着替え"],["pants3","パンツ×３",1],["socks3","靴下×３",1],["tshirt3","Ｔシャツ×３",1],["yshirt2","Ｙシャツ×２",1],["bottoms2","ズボン×２",1],["sandals","サンダル",1],["#","その他"],["trash3","ゴミ袋×３",1],["minaca-trade","交換用MINACA",1],["minaca-spare","余りMINACA",1]]}};
+const PROFILE_KEY="summer-challenger-profile-v1", STATE_KEY="summer-challenger-checks-v3";
+let activeProfile=localStorage.getItem(PROFILE_KEY); if(!checklists[activeProfile]) activeProfile=null;
+let state={}; try{state=JSON.parse(localStorage.getItem(STATE_KEY)||"{}")||{}}catch(e){state={}}
+const realItems=a=>a.filter(x=>x[0]!=="#");
+function updateProgress(){
+ if(!activeProfile)return;
+ let done=0,total=0;
+ ["live","travel","hotel"].forEach(g=>{
+  const items=realItems(checklists[activeProfile][g]), d=items.filter(x=>state[`${activeProfile}-${g}-${x[0]}`]).length;
+  done+=d; total+=items.length;
+  const p=document.getElementById(g+"Progress"); if(p)p.textContent=`${d} / ${items.length}`;
+ });
+ document.getElementById("checkProgress").textContent=`${done} / ${total} チェック済み`;
+ document.getElementById("checkProfileName").textContent=checklists[activeProfile].name;
 }
-
 function renderChecks(){
-  Object.entries(lists).forEach(([group,items])=>{
-    const el=document.getElementById(group+"Checks");
-    el.innerHTML=items.map(item=>{
-      if(item.type==="subhead"){
-        return `<div class="check-subhead">${item.label}</div>`;
-      }
-      const id=`${group}-${item.id}`;
-      return `<label class="check-item ${item.sub?'sub-item':''} ${state[id]?'done':''}">
-        <input type="checkbox" data-id="${id}" ${state[id]?'checked':''}>
-        <span>${item.label}</span>
-      </label>`;
-    }).join("");
-  });
-
-  document.querySelectorAll('.check-item input').forEach(input=>input.addEventListener('change',e=>{
-    state[e.target.dataset.id]=e.target.checked;
-    localStorage.setItem(KEY,JSON.stringify(state));
-    renderChecks();
-  }));
+ if(!activeProfile){document.getElementById("profilePicker").hidden=false;return}
+ ["live","travel","hotel"].forEach(g=>{
+  const el=document.getElementById(g+"Checks");
+  el.innerHTML=checklists[activeProfile][g].map(x=>{
+   if(x[0]==="#")return `<div class="check-subhead">${x[1]}</div>`;
+   const id=`${activeProfile}-${g}-${x[0]}`;
+   return `<label class="check-item ${x[2]?"sub-item":""} ${state[id]?"done":""}"><input type="checkbox" data-id="${id}" ${state[id]?"checked":""}><span>${x[1]}</span></label>`;
+  }).join("");
+ });
+ document.querySelectorAll(".check-item input").forEach(i=>i.addEventListener("change",e=>{state[e.target.dataset.id]=e.target.checked;localStorage.setItem(STATE_KEY,JSON.stringify(state));renderChecks()}));
+ updateProgress();
 }
-
-document.getElementById("resetChecks").addEventListener("click",()=>{
-  if(confirm("チェック状態をすべて未チェックに戻しますか？")){
-    state={};
-    localStorage.removeItem(KEY);
-    renderChecks();
-  }
-});
+function chooseProfile(p){activeProfile=p;localStorage.setItem(PROFILE_KEY,p);document.getElementById("profilePicker").hidden=true;renderChecks()}
+document.querySelectorAll("[data-profile-choice]").forEach(b=>b.addEventListener("click",()=>chooseProfile(b.dataset.profileChoice)));
+document.getElementById("changeProfile").addEventListener("click",()=>document.getElementById("profilePicker").hidden=false);
+document.getElementById("resetChecks").addEventListener("click",()=>{if(!activeProfile)return;if(confirm(`${checklists[activeProfile].name}のチェック状態をすべて未チェックに戻しますか？`)){["live","travel","hotel"].forEach(g=>realItems(checklists[activeProfile][g]).forEach(x=>delete state[`${activeProfile}-${g}-${x[0]}`]));localStorage.setItem(STATE_KEY,JSON.stringify(state));renderChecks()}});
 renderChecks();
 
 const d=new Date();
