@@ -1,0 +1,110 @@
+<!doctype html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+  <meta name="theme-color" content="#fff7fb">
+  <meta name="description" content="INORI MINASE OPEN AIR LIVE 2026 Summer Challenger 旅のしおり">
+  <link rel="manifest" href="manifest.webmanifest">
+  <link rel="stylesheet" href="style.css">
+  <title>Summer Challenger 旅のしおり</title>
+</head>
+<body>
+  <main id="app">
+    <section class="screen active" id="home">
+      <img class="cover" src="images/cover.png" alt="Summer Challenger 旅のしおり">
+      <div class="card today">
+        <p class="eyebrow">TODAY</p>
+        <h1 id="todayTitle">Summer Challenger</h1>
+        <p id="todaySchedule">2026.09.12 — 09.14</p>
+      </div>
+      <div class="quick-grid">
+        <button data-target="schedule">日程を見る</button>
+        <button data-target="live">LIVE情報</button>
+        <button data-target="map">MAP・巡礼</button>
+        <button data-target="check">持ち物</button>
+      </div>
+    </section>
+
+    <section class="screen" id="schedule">
+      <header><p class="eyebrow">SCHEDULE</p><h2>3 DAYS</h2></header>
+      <article class="card day" id="day1">
+        <h3>DAY 1 <small>9/12 SAT</small></h3>
+        <div class="timeline">
+          <p><b>07:30</b> 宮崎台 出発</p>
+          <p><b>10:30</b> リゾートイン芙蓉 到着</p>
+          <p><b>11:00</b> グッズ &amp; フードパーク</p>
+          <p><b>15:30</b> 開場</p>
+          <p><b>17:00</b> LIVE START</p>
+          <p><b>19:30頃</b> 終演予定 → ホテル</p>
+        </div>
+      </article>
+      <article class="card day" id="day2">
+        <h3>DAY 2 <small>9/13 SUN</small></h3>
+        <div class="timeline">
+          <p><b>11:00</b> グッズ &amp; フードパーク</p>
+          <p><b>15:30</b> 開場</p>
+          <p><b>17:00</b> LIVE START</p>
+          <p><b>19:30頃</b> 終演予定 → ホテル</p>
+        </div>
+      </article>
+      <article class="card day" id="day3">
+        <h3>DAY 3 <small>9/14 MON</small></h3>
+        <div class="timeline">
+          <p><b>09:00</b> 富士急ハイランドへ</p>
+          <p>聖地巡礼・コラボ・園内散策</p>
+          <p><b>19:00</b> 富士急営業時間終了予定</p>
+        </div>
+      </article>
+    </section>
+
+    <section class="screen" id="live">
+      <header><p class="eyebrow">LIVE INFORMATION</p><h2>SUMMER CHALLENGER</h2></header>
+      <article class="card">
+        <p><b>会場</b><br>富士急ハイランド・コニファーフォレスト</p>
+        <p><b>開場</b> 15:30　 <b>開演</b> 17:00　 <b>終演予定</b> 19:30</p>
+        <div class="notice">
+          雨天決行 / 水を使った演出あり<br>
+          会場内は雨傘・日傘NG。レインコート等を準備。<br>
+          大きな荷物はクローク・コインロッカーへ。<br>
+          録音・録画・撮影NG。
+        </div>
+      </article>
+      <a class="link-card" href="https://www.inoriminase.com/" target="_blank" rel="noopener">公式サイトを開く ↗</a>
+    </section>
+
+    <section class="screen" id="map">
+      <header><p class="eyebrow">MAP &amp; PILGRIMAGE</p><h2>FUJI-Q COLLAB</h2></header>
+      <img class="map-image" src="images/map.png" alt="富士急ハイランド園内MAP">
+      <div class="spot-list">
+        <div class="spot"><b>① Q-STAGE</b><span>公式写真スポット</span></div>
+        <div class="spot"><b>② PIZZA-LA</b><span>いのりピザ</span></div>
+        <div class="spot"><b>③ NARUTO</b><span>綱手 / 木ノ葉酒造</span></div>
+        <div class="spot"><b>④ San-X Paradise</b><span>こげぱん / いしよわちゃん</span></div>
+        <div class="spot"><b>⑤ FUJIYAMA Sky Deck</b><span>コラボ対象</span></div>
+        <div class="spot"><b>⑥ Sky Cycle Kirarinko</b><span>いのりver. BGM</span></div>
+        <div class="spot"><b>⑦ Fuji Soba</b><span>天そば / かりんとう饅頭</span></div>
+      </div>
+      <p class="muted">※現地では公式MAPも併用。アトラクションは天候・点検等で運休する場合があります。</p>
+    </section>
+
+    <section class="screen" id="check">
+      <header><p class="eyebrow">PACKING CHECK LIST</p><h2>忘れ物防止</h2></header>
+      <div class="check-group card"><h3>LIVE</h3><div id="liveChecks"></div></div>
+      <div class="check-group card"><h3>TRAVEL</h3><div id="travelChecks"></div></div>
+      <div class="check-group card"><h3>HOTEL</h3><div id="hotelChecks"></div></div>
+      <button class="reset" id="resetChecks">チェックをすべて戻す</button>
+    </section>
+  </main>
+
+  <nav class="bottom-nav">
+    <button data-target="home">HOME</button>
+    <button data-target="schedule">SCHEDULE</button>
+    <button data-target="live">LIVE</button>
+    <button data-target="map">MAP</button>
+    <button data-target="check">CHECK</button>
+  </nav>
+
+  <script src="app.js"></script>
+</body>
+</html>
