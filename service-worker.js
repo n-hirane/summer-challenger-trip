@@ -1,4 +1,4 @@
-const CACHE="summer-challenger-v4";
+const CACHE="summer-challenger-v5";
 const ASSETS=[
   "./","./index.html","./style.css","./app.js","./manifest.webmanifest",
   "./images/cover.png","./images/map.png","./images/q-stage.png",
