@@ -20,46 +20,44 @@ hotel:[["#","着替え"],["pants3","パンツ×３",1],["socks3","靴下×３",1
 const PROFILE_KEY="summer-challenger-profile-v1";
 const STATE_KEY="summer-challenger-checks-v3";
 const CUSTOM_KEY="summer-challenger-custom-items-v1";
+const DELETED_KEY="summer-challenger-deleted-fixed-items-v1";
 
 let activeProfile=localStorage.getItem(PROFILE_KEY);
 if(!checklists[activeProfile]) activeProfile=null;
 
 let state={};
-try{
-  state=JSON.parse(localStorage.getItem(STATE_KEY)||"{}")||{};
-}catch(e){
-  state={};
-}
+try{ state=JSON.parse(localStorage.getItem(STATE_KEY)||"{}")||{}; }catch(e){ state={}; }
 
 let customItems={};
-try{
-  customItems=JSON.parse(localStorage.getItem(CUSTOM_KEY)||"{}")||{};
-}catch(e){
-  customItems={};
-}
+try{ customItems=JSON.parse(localStorage.getItem(CUSTOM_KEY)||"{}")||{}; }catch(e){ customItems={}; }
 if(!customItems || typeof customItems!=="object") customItems={};
+
+let deletedFixed={};
+try{ deletedFixed=JSON.parse(localStorage.getItem(DELETED_KEY)||"{}")||{}; }catch(e){ deletedFixed={}; }
+if(!deletedFixed || typeof deletedFixed!=="object") deletedFixed={};
 
 const realItems=a=>a.filter(x=>x[0]!=="#");
 
-function customKey(profile,group){
-  return `${profile}-${group}`;
-}
+function customKey(profile,group){ return `${profile}-${group}`; }
+function fixedDeleteKey(profile,group,id){ return `${profile}-${group}-${id}`; }
 
 function getCustomItems(profile,group){
   const key=customKey(profile,group);
   return Array.isArray(customItems[key]) ? customItems[key] : [];
 }
-
-function saveCustomItems(){
-  localStorage.setItem(CUSTOM_KEY,JSON.stringify(customItems));
-}
+function saveCustomItems(){ localStorage.setItem(CUSTOM_KEY,JSON.stringify(customItems)); }
+function saveDeletedFixed(){ localStorage.setItem(DELETED_KEY,JSON.stringify(deletedFixed)); }
 
 function sanitizeLabel(value){
   return value.replace(/\s+/g," ").trim().slice(0,80);
 }
 
+function visibleFixedItems(profile,group){
+  return realItems(checklists[profile][group]).filter(x=>!deletedFixed[fixedDeleteKey(profile,group,x[0])]);
+}
+
 function countGroup(profile,group){
-  const fixed=realItems(checklists[profile][group]);
+  const fixed=visibleFixedItems(profile,group);
   const custom=getCustomItems(profile,group);
   const all=[
     ...fixed.map(x=>({id:x[0],custom:false})),
@@ -91,11 +89,15 @@ function updateProgress(){
 function renderFixedItems(profile,group){
   return checklists[profile][group].map(x=>{
     if(x[0]==="#")return `<div class="check-subhead">${x[1]}</div>`;
+    if(deletedFixed[fixedDeleteKey(profile,group,x[0])]) return "";
     const id=`${profile}-${group}-fixed-${x[0]}`;
-    return `<label class="check-item ${x[2]?"sub-item":""} ${state[id]?"done":""}">
-      <input type="checkbox" data-id="${id}" ${state[id]?"checked":""}>
-      <span>${x[1]}</span>
-    </label>`;
+    return `<div class="custom-check-row ${state[id]?"done":""}">
+      <label class="check-item ${x[2]?"sub-item":""}">
+        <input type="checkbox" data-id="${id}" ${state[id]?"checked":""}>
+        <span>${x[1]}</span>
+      </label>
+      <button class="delete-custom" type="button" data-delete-fixed="${x[0]}" data-group="${group}" data-label="${x[1]}" aria-label="${x[1]}を削除">削除</button>
+    </div>`;
   }).join("");
 }
 
@@ -147,6 +149,21 @@ function renderChecks(){
     });
   });
 
+  document.querySelectorAll("[data-delete-fixed]").forEach(button=>{
+    button.addEventListener("click",()=>{
+      const group=button.dataset.group;
+      const id=button.dataset.deleteFixed;
+      const label=button.dataset.label;
+      if(confirm(`「${label}」を削除しますか？`)){
+        deletedFixed[fixedDeleteKey(activeProfile,group,id)]=true;
+        delete state[`${activeProfile}-${group}-fixed-${id}`];
+        saveDeletedFixed();
+        localStorage.setItem(STATE_KEY,JSON.stringify(state));
+        renderChecks();
+      }
+    });
+  });
+
   updateProgress();
 }
 
@@ -167,21 +184,16 @@ function openAddDialog(group){
   dialog.hidden=false;
   setTimeout(()=>input.focus(),50);
 }
-
 function closeAddDialog(){
   document.getElementById("customItemDialog").hidden=true;
 }
-
 function addCustomItem(){
   if(!activeProfile)return;
   const dialog=document.getElementById("customItemDialog");
   const group=dialog.dataset.group;
   const input=document.getElementById("customItemInput");
   const label=sanitizeLabel(input.value);
-  if(!label){
-    input.focus();
-    return;
-  }
+  if(!label){ input.focus(); return; }
   const key=customKey(activeProfile,group);
   if(!Array.isArray(customItems[key]))customItems[key]=[];
   const id=`${Date.now().toString(36)}-${Math.random().toString(36).slice(2,7)}`;
@@ -195,11 +207,9 @@ document.querySelectorAll("[data-profile-choice]").forEach(b=>b.addEventListener
 document.getElementById("changeProfile")?.addEventListener("click",()=>{
   document.getElementById("profilePicker").hidden=false;
 });
-
 document.querySelectorAll("[data-add-group]").forEach(b=>{
   b.addEventListener("click",()=>openAddDialog(b.dataset.addGroup));
 });
-
 document.getElementById("customItemCancel")?.addEventListener("click",closeAddDialog);
 document.getElementById("customItemSave")?.addEventListener("click",addCustomItem);
 document.getElementById("customItemInput")?.addEventListener("keydown",e=>{
