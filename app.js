@@ -238,6 +238,34 @@ else if(d>=new Date(2026,8,14)&&d<new Date(2026,8,15)) title="DAY 3 · FUJI-Q";
 else if(d>=new Date(2026,8,15)) title="旅行終了";
 document.getElementById("todayTitle").textContent=title;
 
+
+const MEMO_KEY="summer-challenger-travel-memo-v1";
+const memoEl=document.getElementById("travelMemo");
+const memoStatus=document.getElementById("memoSaveStatus");
+let memoSaveTimer=null;
+
+if(memoEl){
+  memoEl.value=localStorage.getItem(MEMO_KEY)||"";
+
+  memoEl.addEventListener("input",()=>{
+    if(memoStatus)memoStatus.textContent="保存中…";
+    clearTimeout(memoSaveTimer);
+    memoSaveTimer=setTimeout(()=>{
+      localStorage.setItem(MEMO_KEY,memoEl.value);
+      if(memoStatus)memoStatus.textContent="保存済み";
+    },250);
+  });
+
+  document.getElementById("clearMemo")?.addEventListener("click",()=>{
+    if(confirm("メモをすべて消去しますか？")){
+      memoEl.value="";
+      localStorage.removeItem(MEMO_KEY);
+      if(memoStatus)memoStatus.textContent="保存済み";
+    }
+  });
+}
+
+
 if("serviceWorker" in navigator){
   window.addEventListener("load", async ()=>{
     try{

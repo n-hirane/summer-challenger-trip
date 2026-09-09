@@ -6,7 +6,7 @@
   <meta name="theme-color" content="#fff7fb">
   <meta name="description" content="INORI MINASE OPEN AIR LIVE 2026 Summer Challenger 旅のしおり">
   <link rel="manifest" href="manifest.webmanifest">
-  <link rel="stylesheet" href="style.css?v=13">
+  <link rel="stylesheet" href="style.css?v=14">
   <title>Summer Challenger 旅のしおり</title>
 </head>
 <body>
@@ -24,6 +24,7 @@
         <button data-target="map">MAP・巡礼</button>
         <button data-target="check">持ち物</button>
         <button data-target="links">公式HP</button>
+        <button data-target="memo">メモ</button>
       </div>
     </section>
 
@@ -136,6 +137,20 @@
       <p class="muted">外部サイトは通信環境が必要です。</p>
     </section>
 
+    <section class="screen" id="memo">
+      <header><p class="eyebrow">MEMO</p><h2>旅行メモ</h2></header>
+
+      <div class="memo-card">
+        <div class="memo-toolbar">
+          <span id="memoSaveStatus">保存済み</span>
+          <button type="button" id="clearMemo" class="mini-btn">メモを消去</button>
+        </div>
+        <textarea id="travelMemo" class="memo-textarea" placeholder="交換メモ、買うもの、当日の記録など自由に入力できます。"></textarea>
+      </div>
+
+      <p class="muted">このメモはこの端末内に自動保存されます。GitHubを更新しても通常は残ります。</p>
+    </section>
+
     <section class="screen" id="check">
       <header><p class="eyebrow">PACKING CHECK LIST</p><h2>忘れ物防止</h2></header>
       <div class="check-status"><div>表示：<strong id="checkProfileName">未選択</strong> <button id="changeProfile" class="mini-btn">変更</button></div><strong id="checkProgress"></strong></div>
@@ -165,6 +180,6 @@
     <button data-target="check">CHECK</button>
   </nav>
 
-  <script src="app.js?v=13"></script>
+  <script src="app.js?v=14"></script>
 </body>
 </html>

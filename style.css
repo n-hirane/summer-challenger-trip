@@ -28,3 +28,9 @@
 .custom-dialog-actions button{flex:1;border:0;border-radius:12px;padding:11px;font-weight:800}
 .custom-dialog-actions button:first-child{background:#f2f2f2}
 .custom-dialog-actions button:last-child{background:#f3e9ee;color:#6d5361}
+
+.memo-card{background:#fff;border-radius:18px;padding:14px;box-shadow:0 4px 18px #0000000c}
+.memo-toolbar{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:10px}
+.memo-toolbar span{font-size:.8rem;opacity:.55;font-weight:700}
+.memo-textarea{width:100%;min-height:48vh;resize:vertical;border:1px solid #eadfe5;border-radius:14px;padding:14px;font:inherit;line-height:1.7;background:#fffdfd;color:inherit;outline:none}
+.memo-textarea:focus{border-color:#b88fa3;box-shadow:0 0 0 3px #f3e8ee}
