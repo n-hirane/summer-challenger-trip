@@ -43,3 +43,19 @@ else if(d>=new Date(2026,8,15)) title="旅行終了";
 document.getElementById("todayTitle").textContent=title;
 
 if("serviceWorker" in navigator) window.addEventListener("load",()=>navigator.serviceWorker.register("service-worker.js"));
+
+const spotButtons=[...document.querySelectorAll('.spot[data-spot]')];
+const mapMarkers=[...document.querySelectorAll('.map-marker[data-spot]')];
+function selectSpot(number, scrollToMap=false){
+  spotButtons.forEach(b=>b.classList.toggle('selected',b.dataset.spot===number));
+  mapMarkers.forEach(m=>m.classList.toggle('selected',m.dataset.spot===number));
+  if(scrollToMap){
+    document.getElementById('mapWrap')?.scrollIntoView({behavior:'smooth',block:'center'});
+  }
+}
+spotButtons.forEach(button=>button.addEventListener('click',()=>{
+  selectSpot(button.dataset.spot,true);
+}));
+mapMarkers.forEach(marker=>marker.addEventListener('click',()=>{
+  selectSpot(marker.dataset.spot,false);
+}));
