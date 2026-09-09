@@ -98,8 +98,6 @@ document.getElementById("resetChecks").addEventListener("click",()=>{
   }
 });
 renderChecks();
-});
-renderChecks();
 
 const d=new Date();
 const tripDate=new Date(2026,8,d.getDate());
